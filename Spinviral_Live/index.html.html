@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpinViral+ | TOTAL PREVIEW</title>
+    <style>
+        :root { --pink: #ff00de; --cyan: #00f0ff; --green: #39ff14; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; text-align: center; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* 1. AD TAKEOVER (The 15s Intro) */
+        #takeover { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s; }
+        .ad-box { width: 320px; height: 400px; border: 2px solid var(--cyan); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-shadow: 0 0 30px var(--cyan); text-align: center; }
+        .progress-bar { width: 320px; height: 4px; background: #222; margin-top: 20px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--green); width: 0%; animation: fillUp 15s linear forwards; }
+        @keyframes fillUp { to { width: 100%; } }
+
+        /* 2. MAIN APP */
+        .logo { font-size: 2.5rem; font-weight: 900; color: var(--pink); text-shadow: 0 0 15px var(--pink); margin-bottom: 20px; }
+        #canvas-wrapper { position: relative; width: 350px; height: 350px; filter: drop-shadow(0 0 20px var(--cyan)); }
+        #pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--pink); z-index: 10; }
+        
+        .spin-btn { margin-top: 30px; background: var(--cyan); border: none; padding: 15px 60px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px var(--cyan); font-size: 1.2rem; transition: 0.2s; color: #000; }
+        .spin-btn:hover { transform: scale(1.05); background: #fff; }
+
+        /* 3. MODAL */
+        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { border: 2px solid var(--pink); padding: 40px; border-radius: 20px; background: #000; box-shadow: 0 0 50px var(--pink); max-width: 80%; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div id="takeover">
+        <div style="color: var(--cyan); margin-bottom: 20px; letter-spacing: 2px;">BROADCASTING FROM THE ABYSS</div>
+        <div class="ad-box">
+            <div id="ad-text" style="font-size: 1.5rem; font-weight: bold; color: var(--pink);">CONNECTING...</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+    </div>
+
+    <div class="logo">SPINVIRAL+</div>
+    <div id="canvas-wrapper">
+        <div id="pointer"></div>
+        <canvas id="wheel" width="350" height="350"></canvas>
+    </div>
+    <button class="spin-btn" onclick="spinWheel()">SPIN THE ABYSS</button>
+
+    <div id="modal" onclick="this.style.display='none'">
+        <div class="modal-content">
+            <h2 id="win-title" style="color: var(--cyan);">WORDS FROM AFAR</h2>
+            <p id="win-msg" style="font-style: italic; font-size: 1.2rem;"></p>
+            <p style="color: #666; font-size: 0.8rem; margin-top: 20px;">(Click to continue)</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. AD LOGIC
+        const ads = ["AURELIUS PRIVATE JETS", "NOIR COUTURE 2026", "APEX CHRONO"];
+        let adIdx = 0;
+        setInterval(() => {
+            if(adIdx < 3) {
+                document.getElementById('ad-text').innerText = ads[adIdx];
+                adIdx++;
+            }
+        }, 5000);
+
+        setTimeout(() => {
+            document.getElementById('takeover').style.opacity = '0';
+            setTimeout(() => document.getElementById('takeover').style.display = 'none', 1000);
+        }, 15000);
+
+        // 2. WHEEL LOGIC
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const items = ["MEGAPHONE", "WORDS", "VAULT", "WORDS", "MEGAPHONE", "WORDS", "VAULT", "WORDS"];
+        let currentRotation = 0;
+
+        function draw() {
+            const arc = Math.PI / 4;
+            for(let i=0; i<8; i++) {
+                ctx.beginPath();
+                ctx.fillStyle = (i % 2 === 0) ? "#000" : "#0a0a0a";
+                ctx.strokeStyle = "#00f0ff";
+                ctx.lineWidth = 2;
+                ctx.moveTo(175, 175);
+                ctx.arc(175, 175, 170, i * arc, (i+1) * arc);
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.save();
+                ctx.translate(175, 175);
+                ctx.rotate(i * arc + arc/2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = (i % 2 === 0) ? "#ff00de" : "#00f0ff";
+                ctx.font = "bold 12px Inter";
+                ctx.fillText(items[i], 160, 5);
+                ctx.restore();
+            }
+        }
+
+        function spinWheel() {
+            const addedRotation = 1440 + Math.floor(Math.random() * 360);
+            currentRotation += addedRotation;
+            canvas.style.transition = "transform 4s cubic-bezier(0.1, 0.8, 0.2, 1)";
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+            
+            setTimeout(() => {
+                const results = [
+                    "'The abyss is only dark if we don't speak into it.' - @LondonLogic",
+                    "'Success is the sum of small spins repeated daily.' - @PeakSeeker",
+                    "'Neon nights and digital heights. Spin forever.' - @NeoTokyo_99"
+                ];
+                document.getElementById('win-msg').innerText = results[Math.floor(Math.random() * results.length)];
+                document.getElementById('modal').style.display = 'flex';
+            }, 4000);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
